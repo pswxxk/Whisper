@@ -45,6 +45,11 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
         }
+
+        if (collision.gameObject.CompareTag("Monster"))
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionExit(Collision collision)
@@ -54,4 +59,5 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
         }
     }
+
 }
