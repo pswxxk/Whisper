@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class ClimbControll : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float jumpForce = 10f;
-    public bool isGrounded;
-    public float climbHeight = 1.5f;       // 상자 위로 올라갈 높이
-    public float climbSpeed = 5f;          // 상자 위로 올라가는 속도
-    public LayerMask climbableLayer;       // 올라갈 수 있는 오브젝트의 레이어
+    [Header("Climbing Settings")]
+    public float climbDistance = 2f;          // Raycast로 감지할 거리
+    public float climbSpeed = 2f;             // 클라이밍 속도
+    public LayerMask climbableLayer;          // 클라이밍 가능한 오브젝트 레이어
 
     private Rigidbody rb;
-    private bool isClimbing = false;       // 현재 상자에 올라가는 중인지 여부
-    private Vector3 targetPosition;        // 플레이어가 올라갈 목표 위치
+    private bool isClimbing = false;          // 현재 클라이밍 중인지 여부
+    private Vector3 climbTargetPosition;       // 클라이밍 목표 위치
+    private Coroutine climbingCoroutine;       // 클라이밍 코루틴 참조
 
     void Start()
     {
@@ -22,85 +21,91 @@ public class ClimbControll : MonoBehaviour
 
     void Update()
     {
-        if (!isClimbing) // 올라가는 중이 아닐 때만 이동 및 점프 가능
+        // 클라이밍 중일 때는 클라이밍 입력을 무시
+        if (isClimbing)
+            return;
+
+        // 스페이스바를 눌렀을 때 클라이밍 시도
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            // 수평 이동 입력
-            float move = Input.GetAxis("Horizontal");
-
-            // 플레이어의 이동
-            Vector3 movement = new Vector3(move * moveSpeed, rb.velocity.y, 0);
-            rb.velocity = movement;
-
-            // 정면 반대키를 누를 때 y축 회전값을 180도로 변경
-            if (move < 0)
-            {
-                transform.rotation = Quaternion.Euler(0, 180, 0); // 왼쪽을 바라보는 회전
-            }
-            else if (move > 0)
-            {
-                transform.rotation = Quaternion.Euler(0, 0, 0); // 오른쪽을 바라보는 회전
-            }
-
-            // 점프 처리
-            if (Input.GetKeyDown(KeyCode.E) && isGrounded)
-            {
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            }
-        }
-
-        // 스페이스바 눌렀을 때 상자에 붙어서 올라가는 기능
-        if (!isClimbing && Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            // 플레이어 앞에 상자가 있는지 확인 (Raycast)
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit, 2f, climbableLayer))
-            {
-                // 상자를 감지했으면 올라갈 위치 계산
-                targetPosition = new Vector3(hit.transform.position.x, hit.transform.position.y + climbHeight, hit.transform.position.z);
-
-                // 코루틴 시작해서 상자에 올라가기
-                StartCoroutine(Climb());
-            }
+            AttemptClimb();
         }
     }
 
-    // 상자에 올라가는 코루틴
-    IEnumerator Climb()
+    void AttemptClimb()
+    {
+        RaycastHit hit;
+        Vector3 rayOrigin = transform.position + Vector3.up * 1f; // 플레이어의 약간 위 위치
+        Vector3 rayDirection = transform.right;                // 플레이어의 앞 방향
+        float rayDistance = climbDistance;
+
+        // 디버깅을 위해 Raycast 시각화
+        Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.green, 1f);
+
+        // Raycast를 통해 클라이밍 가능한 오브젝트 감지
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, rayDistance, climbableLayer))
+        {
+            Debug.Log("Climbable object detected: " + hit.collider.gameObject.name);
+            // 클라이밍 목표 위치 계산 (오브젝트의 상단 + 클라이밍 높이)
+            Bounds bounds = hit.collider.bounds;
+            climbTargetPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
+
+            // 클라이밍 시작
+            climbingCoroutine = StartCoroutine(ClimbToPosition(climbTargetPosition));
+        }
+        else
+        {
+            Debug.Log("No climbable object detected.");
+        }
+    }
+
+    IEnumerator ClimbToPosition(Vector3 targetPos)
     {
         isClimbing = true;
 
-        // 플레이어가 목표 위치로 이동할 때까지 이동 처리
-        while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
+        Debug.Log("Climbing started.");
+
+        // Rigidbody의 중력 비활성화
+        rb.useGravity = false;
+
+        // 클라이밍 동안 속도 초기화
+        rb.velocity = Vector3.zero;
+
+        
+
+        // 클라이밍 진행
+        while (Vector3.Distance(transform.position, targetPos) > 0.1f)
         {
-            transform.position = Vector3.Lerp(transform.position, targetPosition, climbSpeed * Time.deltaTime);
+            Vector3 direction = (targetPos - transform.position).normalized;
+            Vector3 movement = direction * climbSpeed * Time.deltaTime;
+
+            // 오버슈트 방지
+            if (Vector3.Distance(transform.position, targetPos) < movement.magnitude)
+            {
+                movement = targetPos - transform.position;
+            }
+
+            rb.MovePosition(transform.position + movement);
+
             yield return null;
         }
 
-        // 정확한 위치에 도달 후 상자 위에서 정지
-        transform.position = targetPosition;
+        // 정확한 위치로 설정
+        rb.MovePosition(targetPos);
 
-        // 상자 위로 올라가는 동작 종료
+        // 클라이밍 완료
+        rb.useGravity = true;
         isClimbing = false;
+
+        Debug.Log("Climbing finished.");
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnDrawGizmosSelected()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
-
-        if (collision.gameObject.CompareTag("Monster"))
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
+        // 에디터에서 선택 시 Raycast 시각화
+        Gizmos.color = Color.green;
+        Vector3 rayOrigin = transform.position + Vector3.up * 1f;
+        Vector3 rayDirection = transform.forward;
+        Gizmos.DrawRay(rayOrigin, rayDirection * climbDistance);
     }
 }
