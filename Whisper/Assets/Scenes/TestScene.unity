@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -220,7 +220,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &695902408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,7 +721,7 @@ GameObject:
   - component: {fileID: 1142191719}
   - component: {fileID: 1142191718}
   m_Layer: 3
-  m_Name: Cube (1)
+  m_Name: Climb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -807,7 +807,7 @@ Transform:
   m_GameObject: {fileID: 1142191717}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -35.58, y: -0.57, z: -2.6}
+  m_LocalPosition: {x: 19.45, y: -0.57, z: -2.6}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1055,7 +1055,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &1371955516
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1208,11 +1208,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1809010979}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ffcb4bd792607f4f8200beaa0babb83, type: 3}
+  m_Script: {fileID: 11500000, guid: 95eecdb92f1c9c942b0eff3a43da2fd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1022142326}
   gameEnding: {fileID: 1219117255}
+  openEyes: 10
+  closedEyes: 5
 --- !u!1 &1895426932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1592,7 +1594,6 @@ GameObject:
   - component: {fileID: 2102595804}
   - component: {fileID: 2102595803}
   - component: {fileID: 2102595802}
-  - component: {fileID: 2102595807}
   m_Layer: 0
   m_Name: Key
   m_TagString: Untagged
@@ -1612,7 +1613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 518d5887dd7c48d44bbcef9c82a1ab8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionText: {fileID: 0}
+  interactionText: {fileID: 376228227}
 --- !u!65 &2102595803
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1693,39 +1694,12 @@ Transform:
   m_GameObject: {fileID: 2102595801}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -31.3, y: -4.6, z: -3.07}
+  m_LocalPosition: {x: -37.7, y: -4.6, z: -3.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &2102595807
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2102595801}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
