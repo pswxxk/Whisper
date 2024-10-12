@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     {
         m_Animator = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
-
         m_AudioControl = FindObjectOfType<AudioControl>();
     }
 
@@ -52,20 +51,35 @@ public class PlayerMovement : MonoBehaviour
         // 걷기 상태 설정
         m_Animator.SetBool("IsWalking", isWalking);
 
-        // 토글 방식으로 Ctrl 키를 눌렀을 때 앉거나 일어서는 상태 전환
-        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
-        {
-            isCrouching = !isCrouching; // 토글 상태 전환
-        }
-
-        // 애니메이터에서 앉는 상태 또는 서는 상태 전환
+        // 앉기 상태 전환
         if (isCrouching)
         {
-            m_Animator.SetBool("IsCrouching", true); // StandingToCrouch 상태로 전환
+            // 현재 상태가 Crouch 상태라면, Control 키를 누르면 Idle로 전환
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+            {
+                isCrouching = false; // 웅크린 상태 해제
+                m_Animator.SetBool("IsCrouching", false); // 애니메이터에서 Crouching 상태 해제
+                m_Animator.SetBool("IsWalking", false); // Idle 상태로 전환
+            }
         }
         else
         {
-            m_Animator.SetBool("IsCrouching", false); // CrouchToStanding 상태로 전환
+            // Ctrl 키를 눌렀을 때 앉는 상태로 전환
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+            {
+                isCrouching = true; // 웅크린 상태로 전환
+                m_Animator.SetBool("IsCrouching", true); // 애니메이터에서 Crouching 상태로 전환
+            }
+        }
+
+        // 앉은 상태에서 걷기 상태 전환
+        if (isCrouching && isWalking)
+        {
+            m_Animator.SetBool("IsCrouchWalking", true); // CrouchWalk 상태로 전환
+        }
+        else
+        {
+            m_Animator.SetBool("IsCrouchWalking", false);
         }
 
         // 발소리 오디오 재생 (걷거나 앉아있을 때 오디오 재생)
@@ -84,6 +98,7 @@ public class PlayerMovement : MonoBehaviour
         // canMove가 true일 때만 캐릭터 움직임 적용
         if (canMove)
         {
+            // CrouchWalk 상태에서도 움직일 수 있도록 m_Movement를 사용하여 이동
             m_Rigidbody.MovePosition(m_Rigidbody.position + m_Movement * m_Animator.deltaPosition.magnitude);
             m_Rigidbody.MoveRotation(m_Rotation);
         }
