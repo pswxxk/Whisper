@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     {
         m_Animator = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
-        m_AudioControl = FindObjectOfType<AudioControl>();
+/*        m_AudioControl = FindObjectOfType<AudioControl>();*/
     }
 
     void Update()
@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 오디오가 재생 중일 때 움직임을 막음
+/*        // 오디오가 재생 중일 때 움직임을 막음
         if (m_AudioControl.IsAudioPlaying())
         {
             canMove = false;
@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             canMove = true;
-        }
+        }*/
 
         if (!canMove)
         {
@@ -105,10 +105,10 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // 발소리 오디오 재생
-        if (isWalking || isCrouching)
+/*        if (isWalking || isCrouching)
         {
             m_AudioControl.PlayYellAudio();
-        }
+        }*/
 
         // 회전 로직
         Vector3 desiredForward = Vector3.RotateTowards(transform.forward, m_Movement, turnSpeed * Time.deltaTime, 0f);
