@@ -31,7 +31,7 @@ public class ClimbControll : MonoBehaviour
             return;
 
         // 스페이스바를 눌렀을 때 클라이밍 시도
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             AttemptClimb();
         }
