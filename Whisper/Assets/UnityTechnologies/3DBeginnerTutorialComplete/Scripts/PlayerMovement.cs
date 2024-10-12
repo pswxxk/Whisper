@@ -3,6 +3,9 @@
 public class PlayerMovement : MonoBehaviour
 {
     public float turnSpeed = 20f;
+    public float jumpForce = 5f; // 점프 힘 추가
+    public LayerMask groundLayer; // Ground 체크용 레이어
+
     Animator m_Animator;
     Rigidbody m_Rigidbody;
     Vector3 m_Movement;
@@ -10,13 +13,34 @@ public class PlayerMovement : MonoBehaviour
 
     AudioControl m_AudioControl;
     bool canMove = true;
-    bool isCrouching = false; // 토글 상태를 추적할 변수
+    bool isCrouching = false; 
+    bool isGrounded; 
+    bool isJumping = false; 
 
     void Start()
     {
         m_Animator = GetComponent<Animator>();
         m_Rigidbody = GetComponent<Rigidbody>();
         m_AudioControl = FindObjectOfType<AudioControl>();
+    }
+
+    void Update()
+    {
+        // 바닥 체크
+        isGrounded = Physics.CheckSphere(transform.position + Vector3.down * 0.1f, 0.2f, groundLayer);
+
+        // 바닥에 닿았으면 점프 상태 해제
+        if (isGrounded && isJumping)
+        {
+            isJumping = false;
+            m_Animator.SetBool("IsJumping", false);
+        }
+
+        // 점프 처리
+        if (isGrounded && Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
     }
 
     void FixedUpdate()
@@ -54,53 +78,56 @@ public class PlayerMovement : MonoBehaviour
         // 앉기 상태 전환
         if (isCrouching)
         {
-            // 현재 상태가 Crouch 상태라면, Control 키를 누르면 Idle로 전환
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
-                isCrouching = false; // 웅크린 상태 해제
-                m_Animator.SetBool("IsCrouching", false); // 애니메이터에서 Crouching 상태 해제
-                m_Animator.SetBool("IsWalking", false); // Idle 상태로 전환
+                isCrouching = false;
+                m_Animator.SetBool("IsCrouching", false);
+                m_Animator.SetBool("IsWalking", false);
             }
         }
         else
         {
-            // Ctrl 키를 눌렀을 때 앉는 상태로 전환
             if (Input.GetKeyDown(KeyCode.LeftControl))
             {
-                isCrouching = true; // 웅크린 상태로 전환
-                m_Animator.SetBool("IsCrouching", true); // 애니메이터에서 Crouching 상태로 전환
+                isCrouching = true;
+                m_Animator.SetBool("IsCrouching", true);
             }
         }
 
         // 앉은 상태에서 걷기 상태 전환
         if (isCrouching && isWalking)
         {
-            m_Animator.SetBool("IsCrouchWalking", true); // CrouchWalk 상태로 전환
+            m_Animator.SetBool("IsCrouchWalking", true);
         }
         else
         {
             m_Animator.SetBool("IsCrouchWalking", false);
         }
 
-        // 발소리 오디오 재생 (걷거나 앉아있을 때 오디오 재생)
+        // 발소리 오디오 재생
         if (isWalking || isCrouching)
         {
             m_AudioControl.PlayYellAudio();
         }
 
-        // 회전 로직 (앉은 상태에서도 적용)
+        // 회전 로직
         Vector3 desiredForward = Vector3.RotateTowards(transform.forward, m_Movement, turnSpeed * Time.deltaTime, 0f);
         m_Rotation = Quaternion.LookRotation(desiredForward);
     }
 
     void OnAnimatorMove()
     {
-        // canMove가 true일 때만 캐릭터 움직임 적용
         if (canMove)
         {
-            // CrouchWalk 상태에서도 움직일 수 있도록 m_Movement를 사용하여 이동
             m_Rigidbody.MovePosition(m_Rigidbody.position + m_Movement * m_Animator.deltaPosition.magnitude);
             m_Rigidbody.MoveRotation(m_Rotation);
         }
+    }
+
+    void Jump()
+    {
+        isJumping = true; // 점프 상태로 전환
+        m_Animator.SetBool("IsJumping", true); // 점프 애니메이션 활성화
+        m_Rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse); // 점프 적용
     }
 }
