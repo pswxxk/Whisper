@@ -14,20 +14,28 @@ public class Teleport : MonoBehaviour
         {
             if (IsDoorInFront()) // 문이 앞에 있는지 확인
             {
+                Debug.Log("문을 감지했습니다. 텔레포트합니다."); // 문이 감지되었을 때
                 Portal();
+            }
+            else
+            {
+                Debug.Log("문이 감지되지 않았습니다."); // 문이 감지되지 않았을 때
             }
         }
     }
 
     bool IsDoorInFront()
     {
-        // 카메라에서 앞으로 Raycast를 쏘아 문이 있는지 확인
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.right, out hit, interactionDistance, doorLayer))
+        // 플레이어가 보는 방향으로 Raycast를 쏨 (오른쪽 또는 왼쪽 방향으로)
+        Vector3 direction = transform.right; // 오른쪽 방향으로 Raycast 발사
+        if (Physics.Raycast(transform.position, direction, out hit, interactionDistance, doorLayer))
         {
-            return true; // 문이 앞에 있음
+            Debug.Log("Raycast가 문을 맞췄습니다: " + hit.collider.name);
+            return true;
         }
-        return false; // 문이 없음
+        Debug.Log("Raycast가 아무것도 맞추지 못했습니다.");
+        return false;
     }
 
     void Portal()
