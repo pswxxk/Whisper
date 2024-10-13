@@ -18,12 +18,12 @@ public class PushCtrl : MonoBehaviour
         {
             if (isPulling)
             {
-                Debug.Log("E 키가 눌림: 오브젝트를 놓습니다.");
+                Debug.Log("C 키가 눌림: 오브젝트를 놓습니다.");
                 ReleaseObject();
             }
             else
             {
-                Debug.Log("E 키가 눌림: 오브젝트를 끌 시도.");
+                Debug.Log("C 키가 눌림: 오브젝트를 끌 시도.");
                 TryToPullObject();
             }
         }
