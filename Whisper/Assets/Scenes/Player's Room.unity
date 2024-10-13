@@ -1082,6 +1082,26 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2022430927}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 050777dae813b3140badf2e0f3c33bbc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2022430932}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 050777dae813b3140badf2e0f3c33bbc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2022430931}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 050777dae813b3140badf2e0f3c33bbc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2022430930}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 050777dae813b3140badf2e0f3c33bbc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2022430929}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 050777dae813b3140badf2e0f3c33bbc,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2022430928}
   m_SourcePrefab: {fileID: 100100000, guid: 050777dae813b3140badf2e0f3c33bbc, type: 3}
 --- !u!4 &2022430922 stripped
 Transform:
@@ -1258,6 +1278,83 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2022430928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462269823}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4fdbe45cacee1b41a6e1c9812ceeff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxDistance: 2
+  holdPoint: {fileID: 0}
+--- !u!114 &2022430929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462269823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57636602b9c99754aa7d5643407e2bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  climbDistance: 2
+  climbSpeed: 2
+  climbableLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  climbTopOffset: 1
+  climbCenterOffset: 1
+--- !u!114 &2022430930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462269823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c382e4e3bfbbf841acdee10611a96b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2022430931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462269823}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4faca0969198ad5479f8c60f321cadd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleportDestination: {fileID: 0}
+  interactionDistance: 3
+  doorLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!114 &2022430932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462269823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 273a60903becdc1439a829fa822f2a6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  jumpForce: 10
+  isGrounded: 0
 --- !u!1 &2116371702
 GameObject:
   m_ObjectHideFlags: 0
