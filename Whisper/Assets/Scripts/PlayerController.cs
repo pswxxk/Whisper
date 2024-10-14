@@ -3,61 +3,74 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    public float jumpForce = 10f;
-    public bool isGrounded;
+    public float rotationSpeed = 10f;
+    public float jumpForce = 5f;
+
+    private bool isGrounded;
 
     private Rigidbody rb;
+    private Vector3 moveDirection;
+    private Animator animator;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        // 수평 이동 입력
-        float move = Input.GetAxis("Horizontal");
+        Move();
+        Rotate();
+        UpdateAnimation(); 
 
-        // 플레이어의 이동
-        Vector3 movement = new Vector3(move * moveSpeed, rb.velocity.y, 0);
-        rb.velocity = movement;
-
-        // 정면 반대키를 누를 때 y축 회전값을 180도로 변경
-        if (move < 0)
-        {
-            transform.rotation = Quaternion.Euler(0, 180, 0); // 왼쪽을 바라보는 회전
-        }
-        else if (move > 0)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 0); // 오른쪽을 바라보는 회전
-        }
-
-        // 점프 처리
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            Jump();  // 점프 실행
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void Move()
+    {
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        // 방향 설정
+        moveDirection = new Vector3(moveX, 0, moveZ).normalized;
+
+        // 이동 처리
+        if (moveDirection.magnitude > 0.1f)
+        {
+            transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
+        }
+    }
+
+    void Rotate()
+    {
+        if (moveDirection.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+    void Jump()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+        isGrounded = false;
+    }
+
+
+    void UpdateAnimation()
+    {
+        bool isWalking = moveDirection.magnitude > 0.1f;
+        animator.SetBool("isWalking", isWalking);
+    }
+
+    void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
         }
-
-        if (collision.gameObject.CompareTag("Monster"))
-        {
-            Destroy(gameObject);
-        }
     }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
-    }
-
 }
