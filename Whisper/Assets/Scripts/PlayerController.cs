@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 5f;
 
     private bool isGrounded;
+    private bool isJumping;
 
     private Rigidbody rb;
     private Vector3 moveDirection;
@@ -53,17 +54,26 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
+
     void Jump()
     {
         rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
         isGrounded = false;
+        isJumping = true;
+        animator.SetBool("isJumping", true);  // 점프 애니메이션 활성화
     }
-
 
     void UpdateAnimation()
     {
         bool isWalking = moveDirection.magnitude > 0.1f;
         animator.SetBool("isWalking", isWalking);
+
+        // 점프 중이 아니고 땅에 착지했을 때만 점프 애니메이션 종료
+        if (isGrounded && isJumping)
+        {
+            isJumping = false;
+            animator.SetBool("isJumping", false);  // 점프 애니메이션 비활성화
+        }
     }
 
     void OnCollisionEnter(Collision collision)
