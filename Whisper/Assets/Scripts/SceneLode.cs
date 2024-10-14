@@ -9,9 +9,19 @@ public class SceneLode : MonoBehaviour
     public Text interactionText; // 문구를 표시할 UI 텍스트
     private bool isHovering = false; // 현재 호버 상태인지 여부
 
+    private Color[] originalColors; // 모든 재질의 원래 색상을 저장할 배열
+
     void Start()
     {
         objectRenderer = GetComponent<Renderer>();
+
+        // 모든 재질의 원래 색상을 저장
+        int materialCount = objectRenderer.materials.Length;
+        originalColors = new Color[materialCount];
+        for (int i = 0; i < materialCount; i++)
+        {
+            originalColors[i] = objectRenderer.materials[i].color;
+        }
 
         // interactionText가 에디터에서 제대로 연결되지 않았을 경우 대비
         if (interactionText != null)
@@ -57,11 +67,28 @@ public class SceneLode : MonoBehaviour
 
         if (isHovering)
         {
-            objectRenderer.material.color = Color.green; // 호버 상태일 때 색상 변경
+            // 모든 재질의 색상을 초록색으로 변경
+            foreach (var mat in objectRenderer.materials)
+            {
+                mat.color = Color.green;
+            }
+            if (interactionText != null)
+            {
+                interactionText.gameObject.SetActive(true);
+                interactionText.text = "V키를 눌러 다음 방으로 이동";
+            }
         }
         else
         {
-            objectRenderer.material.color = Color.white; // 호버 상태 아닐 때 기본 색상
+            // 모든 재질의 색상을 원래대로 복원
+            for (int i = 0; i < objectRenderer.materials.Length; i++)
+            {
+                objectRenderer.materials[i].color = originalColors[i];
+            }
+            if (interactionText != null)
+                {
+                    interactionText.gameObject.SetActive(false);
+                }
         }
     }
 }
