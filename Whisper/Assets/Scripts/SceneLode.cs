@@ -35,10 +35,10 @@ public class SceneLode : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (isHovering && Input.GetKeyDown(KeyCode.E))
+        if (isHovering && Input.GetKeyDown(KeyCode.V))
         {
             GameManager.Instance.LoadScene("SceneName");
-            Debug.Log("어쩄든 작동은 됨");
+            Debug.Log("어쨋든 작동은 됨");
         }
     }
     // 플레이어가 트리거 콜라이더에서 나갔을 때 호출됨
