@@ -1,45 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PushObject : MonoBehaviour
 {
     public Collider pushObjects;
-    public Animator animator;
+    private PlayerController playerController;
+    private Animator animator;
 
-    public bool isPushing;
-
-    // Start is called before the first frame update
     void Start()
     {
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            playerController = player.GetComponent<PlayerController>();
+        }
         animator = GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && playerController != null)
         {
-            Push(); 
+            playerController.Push();  
         }
     }
 
-    void Push()
-    {
-        isPushing = true;
-        animator.SetBool("isPushing", true);
-    }
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && playerController != null)  
         {
-            isPushing = false;
-            animator.SetBool("isPushing", false); 
+            playerController.StopPushing();  
         }
     }
 }

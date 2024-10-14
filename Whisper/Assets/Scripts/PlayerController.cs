@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isGrounded;
     private bool isJumping;
+    private bool isPushing;
 
     private Rigidbody rb;
     private Vector3 moveDirection;
@@ -61,6 +62,19 @@ public class PlayerController : MonoBehaviour
         isGrounded = false;
         isJumping = true;
         animator.SetBool("isJumping", true);  // 점프 애니메이션 활성화
+    }
+    public void Push()
+    {
+        isPushing = true;
+        animator.SetBool("isPushing", true);
+        animator.SetBool("isWalking", false);
+        Debug.Log("밀어");
+    }
+
+    public void StopPushing()
+    {
+        isPushing = false;
+        animator.SetBool("isPushing", false);
     }
 
     void UpdateAnimation()
