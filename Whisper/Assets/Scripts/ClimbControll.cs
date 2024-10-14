@@ -19,9 +19,31 @@ public class ClimbControll : MonoBehaviour
     private Vector3 climbCenterPosition;       // 클라이밍 완료 후 중앙 위치
     private Vector3 climbDirection;            // Climb direction based on hit.normal
 
+    // Raycast 결과를 시각화하기 위한 변수
+    private bool lastRaycastHit = false;
+    private Vector3 lastHitPoint;
+
+    // LineRenderer 참조
+    private LineRenderer lineRenderer;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        // LineRenderer 초기화
+        lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer == null)
+        {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+        }
+
+        lineRenderer.positionCount = 2;
+        lineRenderer.startWidth = 0.05f;
+        lineRenderer.endWidth = 0.05f;
+        lineRenderer.useWorldSpace = true;
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default")); // 기본 쉐이더 설정
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lineRenderer.receiveShadows = false;
     }
 
     void Update()
@@ -30,18 +52,21 @@ public class ClimbControll : MonoBehaviour
         if (isClimbing)
             return;
 
-        // 스페이스바를 눌렀을 때 클라이밍 시도
+        // 클라이밍 입력 (예: F 키)
         if (Input.GetKeyDown(KeyCode.F))
         {
             AttemptClimb();
         }
+
+        // 실시간 Raycast 시각화
+        VisualizeRaycast();
     }
 
     void AttemptClimb()
     {
         RaycastHit hit;
         Vector3 rayOrigin = transform.position + Vector3.up * 1f; // 플레이어의 약간 위 위치
-        Vector3 rayDirection = transform.right;                // 플레이어의 오른쪽 방향
+        Vector3 rayDirection = transform.forward;                // 플레이어의 정면 방향
         float rayDistance = climbDistance;
 
         // 디버깅을 위해 Raycast 시각화 (1초 동안 초록색 선 표시)
@@ -64,12 +89,17 @@ public class ClimbControll : MonoBehaviour
             // 클라이밍 완료 후 중앙 위치 설정 (오브젝트 중앙 방향으로 climbCenterOffset 만큼 이동)
             climbCenterPosition = climbTargetPosition + climbDirection * climbCenterOffset;
 
+            // Raycast 결과 저장
+            lastRaycastHit = true;
+            lastHitPoint = hit.point;
+
             // 클라이밍 시작
             StartCoroutine(ClimbToPosition(climbTargetPosition, climbCenterPosition));
         }
         else
         {
             Debug.Log("No climbable object detected.");
+            lastRaycastHit = false;
         }
     }
 
@@ -132,12 +162,43 @@ public class ClimbControll : MonoBehaviour
         Debug.Log("Climbing finished.");
     }
 
+    void VisualizeRaycast()
+    {
+        RaycastHit hit;
+        Vector3 rayOrigin = transform.position + Vector3.up * 1f; // 플레이어의 약간 위 위치
+        Vector3 rayDirection = transform.forward;                // 플레이어의 정면 방향
+        float rayDistance = climbDistance;
+
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, rayDistance, climbableLayer))
+        {
+            // Raycast가 충돌했을 때
+            lineRenderer.startColor = Color.red;
+            lineRenderer.endColor = Color.red;
+            lineRenderer.SetPosition(0, rayOrigin);
+            lineRenderer.SetPosition(1, hit.point);
+        }
+        else
+        {
+            // Raycast가 충돌하지 않았을 때
+            lineRenderer.startColor = Color.green;
+            lineRenderer.endColor = Color.green;
+            lineRenderer.SetPosition(0, rayOrigin);
+            lineRenderer.SetPosition(1, rayOrigin + rayDirection * climbDistance);
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         // 에디터에서 선택 시 Raycast 시각화
-        Gizmos.color = Color.green;
-        Vector3 rayOrigin = transform.position + Vector3.up * 1f;
-        Vector3 rayDirection = transform.right; // Raycast 방향을 transform.right로 일치
+        Gizmos.color = lastRaycastHit ? Color.red : Color.green;
+        Vector3 rayOrigin = transform.position + Vector3.up * 0.05f;
+        Vector3 rayDirection = transform.forward;
         Gizmos.DrawRay(rayOrigin, rayDirection * climbDistance);
+
+        if (lastRaycastHit)
+        {
+            // Raycast가 충돌한 지점에 작은 구 표시
+            Gizmos.DrawSphere(lastHitPoint, 0.1f);
+        }
     }
 }

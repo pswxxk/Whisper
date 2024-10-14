@@ -269,6 +269,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &364972245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 364972247}
+  - component: {fileID: 364972246}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &364972246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364972245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c77d9e648ba494545a9ceb5f7eee5e09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &364972247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364972245}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.40017253, y: -0.90999174, z: 0.4273574}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &399619223
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,6 +575,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &499327536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 499327530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57636602b9c99754aa7d5643407e2bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  climbDistance: 3
+  climbSpeed: 5
+  climbableLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  climbTopOffset: 1
+  climbCenterOffset: 1
 --- !u!1001 &713898427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -630,6 +693,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 499327535}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 58bdd7a04bb5536488e5039161e84189,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 499327536}
   m_SourcePrefab: {fileID: 100100000, guid: 58bdd7a04bb5536488e5039161e84189, type: 3}
 --- !u!1001 &960766514
 PrefabInstance:
@@ -934,7 +1001,7 @@ GameObject:
   - component: {fileID: 1054802905}
   - component: {fileID: 1054802906}
   - component: {fileID: 1054802907}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Push
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1085,6 +1152,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Box
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2f86d136c5990534ab927e29ddd06f22,
+        type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1817,3 +1889,4 @@ SceneRoots:
   - {fileID: 713898427}
   - {fileID: 1378337022}
   - {fileID: 960766514}
+  - {fileID: 364972247}
