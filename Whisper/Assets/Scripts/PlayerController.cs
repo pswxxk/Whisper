@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         Rotate();
-        UpdateAnimation(); 
+        UpdateAnimation();
 
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
