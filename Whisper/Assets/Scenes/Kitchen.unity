@@ -2878,6 +2878,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   rayColor: {r: 1, g: 0, b: 0, a: 1}
+  rayLength: 100
 --- !u!4 &1689203147 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6f751fdb51b54c54696848fa48e7bb0e,
