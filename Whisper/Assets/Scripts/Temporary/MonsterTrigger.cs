@@ -26,12 +26,11 @@ public class MonsterTrigger : MonoBehaviour
     {
         while (true)
         {
-            // 콜라이더 활성화
+
             monsterCollider.enabled = true;
             Debug.Log("Collider 활성화됨.");
             yield return new WaitForSeconds(interval);  
 
-            // 콜라이더 비활성화
             monsterCollider.enabled = false;
             Debug.Log("Collider 비활성화됨.");
             yield return new WaitForSeconds(interval);  
