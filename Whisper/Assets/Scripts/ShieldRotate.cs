@@ -6,7 +6,7 @@ public class ShieldRotator : MonoBehaviour
     [SerializeField, Tooltip("Angular velocity in degrees per second")]
     Vector3 m_Velocity;
 
-    bool m_IsRotating = true; // 회전 여부를 나타내는 변수 추가
+    bool m_IsRotating = true;
     Coroutine m_RotationCoroutine;
 
     void Start()
@@ -18,36 +18,52 @@ public class ShieldRotator : MonoBehaviour
     {
         while (true)
         {
-            // 회전
             while (m_IsRotating)
             {
-                transform.Rotate(m_Velocity * Time.deltaTime);
+                RotateX();
 
-                if (Mathf.Abs(transform.eulerAngles.z) >= 90f)
+                float normalizedX = NormalizeAngle(transform.eulerAngles.x);
+
+                if (normalizedX >= 90f)
                 {
                     m_IsRotating = false;
                 }
-                yield return null; // 다음 프레임까지 대기
+
+                yield return null;
             }
 
-            // 10초 대기
-            yield return new WaitForSeconds(10f);
-
-            // 0도로 회전
-            while (transform.eulerAngles.z > 0)
-            {
-                transform.Rotate(-m_Velocity * Time.deltaTime);
-                yield return null; // 다음 프레임까지 대기
-            }
-
-            // Z축 각도가 0이 되면 정지
-            transform.eulerAngles = Vector3.zero;
-
-            // 5초 대기
             yield return new WaitForSeconds(5f);
 
-            // 다시 회전 시작
+            while (NormalizeAngle(transform.eulerAngles.x) > 0f)
+            {
+                RotateX(-m_Velocity.x);
+                yield return null;
+            }
+
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z);
+
+            yield return new WaitForSeconds(5f);
+
             m_IsRotating = true;
         }
+    }
+
+    void RotateX(float velocityX = 0)
+    {
+        Vector3 currentRotation = transform.eulerAngles;
+        float deltaX = velocityX == 0 ? m_Velocity.x * Time.deltaTime : velocityX * Time.deltaTime;
+
+        transform.eulerAngles = new Vector3(
+            currentRotation.x + deltaX,
+            currentRotation.y,
+            currentRotation.z
+        );
+    }
+
+    // 각도를 -180° ~ 180° 범위로 정규화하는 함수
+    float NormalizeAngle(float angle)
+    {
+        if (angle > 180f) angle -= 360f;
+        return angle;
     }
 }
