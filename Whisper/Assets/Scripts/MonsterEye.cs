@@ -9,8 +9,9 @@ public class MonsterEye : MonoBehaviour
 
     bool m_IsPlayerInRange;
     bool m_IsObserving = true;
-    public float openEyes = 10f;
+    public float openEyes = 5f;
     public float closedEyes = 5f;
+
 
     void Start()
     {
@@ -54,7 +55,7 @@ public class MonsterEye : MonoBehaviour
     {
         while (true)
         {
-            m_IsObserving = true;
+            m_IsObserving = true; 
             Debug.Log("´« ¶¹Áö·Õ");
             yield return new WaitForSeconds(openEyes);
 
