@@ -32,7 +32,7 @@ public class ShieldRotator : MonoBehaviour
                 yield return null;
             }
 
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(18f);
 
             while (NormalizeAngle(transform.eulerAngles.x) > 0f)
             {
@@ -42,7 +42,7 @@ public class ShieldRotator : MonoBehaviour
 
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, transform.eulerAngles.z);
 
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(18f);
 
             m_IsRotating = true;
         }

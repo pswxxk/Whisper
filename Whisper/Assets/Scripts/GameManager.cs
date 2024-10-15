@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
-        SceneManager.LoadScene("Player's Room");
+        SceneManager.LoadScene("Kitchen");
     }
 
     public void QuitGame()
